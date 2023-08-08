@@ -42,7 +42,7 @@ jobs:
         CURRENT_VERSION=$(node -p "require('./package.json').version")
         
         # Determine bump type
-        BUMP_TYPE=${{ steps.determine_bump.outputs.major_minor_patch }}
+        BUMP_TYPE=${{ steps.determine_bump.outputs }}
 
         # Calculate new version
         if [ "$BUMP_TYPE" != "none" ]; then
