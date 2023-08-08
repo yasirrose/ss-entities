@@ -3,7 +3,7 @@ name: Publish NPM Package
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   publish:
@@ -57,7 +57,4 @@ jobs:
 
     - name: Push Changes
       run: |
-        git config user.name "GitHub Actions"
-        git config user.email "actions@github.com"
-        git commit -am "chore: version bump" --allow-empty
         git push --follow-tags
