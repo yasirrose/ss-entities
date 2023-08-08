@@ -49,6 +49,8 @@ jobs:
 
         # Update package.json with new version
         npm --no-git-tag-version version $NEW_VERSION
+      env:
+        GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
 
     - name: Publish to NPM
       env:
