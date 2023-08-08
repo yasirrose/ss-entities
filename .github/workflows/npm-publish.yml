@@ -42,6 +42,8 @@ jobs:
 
     - name: Bump Version
       run: npm version ${{ steps.determine_bump.outputs.major_minor_patch }}
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
     - name: Publish to NPM
       run: npm publish
