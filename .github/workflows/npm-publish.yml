@@ -56,7 +56,6 @@ jobs:
           echo "No version change"
         fi
 
-
     - name: Publish to NPM
       run: npm publish
       env:
