@@ -46,8 +46,8 @@ jobs:
 
         # Calculate new version
         if [ "$BUMP_TYPE" != "none" ]; then
-          NEW_VERSION=$(npm version --no-git-tag-version $BUMP_TYPE $CURRENT_VERSION)
-          npm --allow-same-version --no-git-tag-version version $NEW_VERSION
+          NEW_VERSION=$(node -p "require('semver').inc('$CURRENT_VERSION', '$BUMP_TYPE')")
+          sed -i "s/\"version\": \".*\"/\"version\": \"$NEW_VERSION\"/" package.json
         fi
 
         # Commit and push updated package.json
