@@ -44,8 +44,6 @@ jobs:
         # Determine bump type
         BUMP_TYPE=${{ steps.determine_bump.outputs.major_minor_patch }}
 
-        # Calculate new version
-        NEW_VERSION=$(npm version --allow-same-version $BUMP_TYPE $CURRENT_VERSION)
 
     - name: Publish to NPM
       env:
