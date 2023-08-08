@@ -55,6 +55,8 @@ jobs:
         git config user.email "yasirrose@hotmail.com"
         git commit -am "chore: version bump" --allow-empty
         git push --follow-tags
+      env:
+        GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
 
 
     - name: Publish to NPM
