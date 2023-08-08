@@ -36,27 +36,27 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
 
-    - name: Update Package Version
-      run: |
-        # Get current version from package.json
-        CURRENT_VERSION=$(node -p "require('./package.json').version")
+    # - name: Update Package Version
+    #   run: |
+    #     # Get current version from package.json
+    #     CURRENT_VERSION=$(node -p "require('./package.json').version")
         
-        # Determine bump type
-        BUMP_TYPE=${{ steps.determine_bump.outputs.major_minor_patch }}
+    #     # Determine bump type
+    #     BUMP_TYPE=${{ steps.determine_bump.outputs.major_minor_patch }}
 
-        # Calculate new version
-        if [ "$BUMP_TYPE" != "none" ]; then
-          NEW_VERSION=$(node -p "require('semver').inc('$CURRENT_VERSION', '$BUMP_TYPE')")
-          sed -i "s/\"version\": \".*\"/\"version\": \"$NEW_VERSION\"/" package.json
-        fi
+    #     # Calculate new version
+    #     if [ "$BUMP_TYPE" != "none" ]; then
+    #       NEW_VERSION=$(node -p "require('semver').inc('$CURRENT_VERSION', '$BUMP_TYPE')")
+    #       sed -i "s/\"version\": \".*\"/\"version\": \"$NEW_VERSION\"/" package.json
+    #     fi
 
-        # # Commit and push updated package.json
-        # git config user.name "yasirrose"
-        # git config user.email "yasirrose@hotmail.com"
-        # git commit -am "chore: version bump" --allow-empty
-        # # git push --follow-tags
-      env:
-        GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
+    #     # # Commit and push updated package.json
+    #     # git config user.name "yasirrose"
+    #     # git config user.email "yasirrose@hotmail.com"
+    #     # git commit -am "chore: version bump" --allow-empty
+    #     # # git push --follow-tags
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
 
 
     - name: Publish to NPM
