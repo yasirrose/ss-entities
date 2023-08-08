@@ -47,16 +47,14 @@ jobs:
         # Calculate new version
         if [ "$BUMP_TYPE" != "none" ]; then
           NEW_VERSION=$(node -p "require('semver').inc('$CURRENT_VERSION', '$BUMP_TYPE')")
-          sed -i "s/\"version\": \".*\"/\"version\": \"$NEW_VERSION\"/" package.json
-        fi
 
-        # Commit and push updated package.json
-        git config user.name "yasirrose"
-        git config user.email "yasirrose@hotmail.com"
-        git commit -am "chore: version bump" --allow-empty
-        git push origin HEAD:${{ github.ref }} --follow-tags
-      env:
-        GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
+          # Use the updated version in subsequent steps
+          echo "Updated version: $NEW_VERSION"
+
+          # You can perform further actions with the new version here
+        else
+          echo "No version change"
+        fi
 
 
     - name: Publish to NPM
