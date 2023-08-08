@@ -45,7 +45,7 @@ jobs:
         BUMP_TYPE=${{ steps.determine_bump.outputs.major_minor_patch }}
 
         # Calculate new version
-        NEW_VERSION=$(npm version --no-git-tag-version $BUMP_TYPE $CURRENT_VERSION)
+        NEW_VERSION=$(npm version --allow-same-version --no-git-tag-version $BUMP_TYPE $CURRENT_VERSION)
 
         # Update package.json with new version
         npm --no-git-tag-version version $NEW_VERSION
