@@ -47,6 +47,7 @@ jobs:
         # Calculate new version
         if [ "$BUMP_TYPE" != "none" ]; then
           NEW_VERSION=$(node -p "require('semver').inc('$CURRENT_VERSION', '$BUMP_TYPE')")
+          npm version $BUMP_TYPE --git-tag-version false
 
           # Use the updated version in subsequent steps
           echo "Updated version: $NEW_VERSION"
