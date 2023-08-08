@@ -3,7 +3,7 @@ name: Publish NPM Package
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   publish:
@@ -26,7 +26,7 @@ jobs:
       id: determine_bump
       run: |
         MESSAGE=$(git log -1 --pretty=%B)
-        if echo "$MESSAGE" | grep -qi "BREAKING CHANGE:"; then
+        if echo "$MESSAGE" | grep -qi "BREAKING CHANGE"; then
           echo "major"
         elif echo "$MESSAGE" | grep -qi "feat:"; then
           echo "minor"
@@ -36,12 +36,28 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
 
-    - name: Bump Version
-      run: npm version ${{ steps.determine_bump.outputs.major_minor_patch }}
-      env:
-        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+    - name: Update Package Version
+      run: |
+        # Get current version from package.json
+        CURRENT_VERSION=$(node -p "require('./package.json').version")
+        
+        # Determine bump type
+        BUMP_TYPE=${{ steps.determine_bump.outputs.major_minor_patch }}
+
+        # Calculate new version
+        NEW_VERSION=$(npm version $BUMP_TYPE $CURRENT_VERSION)
+
+        # Update package.json with new version
+        npm --no-git-tag-version version $NEW_VERSION
 
     - name: Publish to NPM
-      run:  npm publish
       env:
-        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}  # Set up this secret in your repository settings
+      run: npm publish
+
+    - name: Push Changes
+      run: |
+        git config user.name "GitHub Actions"
+        git config user.email "actions@github.com"
+        git commit -am "chore: version bump" --allow-empty
+        git push --follow-tags
