@@ -54,7 +54,7 @@ jobs:
         git config user.name "yasirrose"
         git config user.email "yasirrose@hotmail.com"
         git commit -am "chore: version bump" --allow-empty
-        git push --follow-tags
+        # git push --follow-tags
       env:
         GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
 
