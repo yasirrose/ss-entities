@@ -50,9 +50,6 @@ jobs:
           npm --allow-same-version --no-git-tag-version version $NEW_VERSION
         fi
 
-        # Update package.json with new version
-        npm --no-git-tag-version version $NEW_VERSION
-
         # Commit and push updated package.json
         git config user.name "yasirrose"
         git config user.email "yasirrose@hotmail.com"
