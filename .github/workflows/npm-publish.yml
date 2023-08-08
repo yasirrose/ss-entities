@@ -50,16 +50,16 @@ jobs:
           sed -i "s/\"version\": \".*\"/\"version\": \"$NEW_VERSION\"/" package.json
         fi
 
-        # Commit and push updated package.json
-        git config user.name "yasirrose"
-        git config user.email "yasirrose@hotmail.com"
-        git commit -am "chore: version bump" --allow-empty
-        # git push --follow-tags
+        # # Commit and push updated package.json
+        # git config user.name "yasirrose"
+        # git config user.email "yasirrose@hotmail.com"
+        # git commit -am "chore: version bump" --allow-empty
+        # # git push --follow-tags
       env:
         GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
 
 
     - name: Publish to NPM
-      env:
-        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}  # Set up this secret in your repository settings
       run: npm publish
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
