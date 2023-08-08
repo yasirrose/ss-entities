@@ -27,11 +27,11 @@ jobs:
       run: |
         MESSAGE=$(git log -1 --pretty=%B)
         if echo "$MESSAGE" | grep -qi "BREAKING CHANGE"; then
-          echo "major"
+          echo "::set-output name=bump::major"
         elif echo "$MESSAGE" | grep -qi "feat:"; then
-          echo "minor"
+          echo "::set-output name=bump::minor"
         else
-          echo "patch"
+          echo "::set-output name=bump::patch"
         fi
       env:
         GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
@@ -42,7 +42,7 @@ jobs:
         CURRENT_VERSION=$(node -p "require('./package.json').version")
         
         # Determine bump type
-        BUMP_TYPE=${{ steps.determine_bump.outputs.stdout }}
+        BUMP_TYPE=${{ steps.determine_bump.outputs.bump }}
 
         # Calculate new version
         if [ "$BUMP_TYPE" != "none" ]; then
