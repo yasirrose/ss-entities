@@ -3,7 +3,7 @@ name: Publish NPM Package
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   publish:
@@ -16,12 +16,35 @@ jobs:
     - name: Set up Node.js
       uses: actions/setup-node@v2
       with:
-        node-version: 18
+        node-version: 14
 
-    - name: Install dependencies
-      run: npm install
+    # - name: Install dependencies
+    #   run: npm install
 
-    - name: Publish to NPM
+    - name: Configure npm authentication
+      run: echo "//registry.npmjs.org/:_authToken=\${NODE_AUTH_TOKEN}" > .npmrc
       env:
         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}  # Set up this secret in your repository settings
-      run: npx semantic-release
+
+    - name: Determine Version Bump
+      id: determine_bump
+      run: |
+        MESSAGE=$(git log -1 --pretty=%B)
+        if echo "$MESSAGE" | grep -qi "BREAKING CHANGE"; then
+          echo "major"
+        elif echo "$MESSAGE" | grep -qi "feat:"; then
+          echo "minor"
+        else
+          echo "patch"
+        fi
+      env:
+        GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
+
+    - name: Bump Version
+      run: npm version ${{ steps.determine_bump.outputs.major_minor_patch }}
+
+    - name: Publish to NPM
+      run: npm publish
+
+    - name: Push Changes
+      run: git push --follow-tags
