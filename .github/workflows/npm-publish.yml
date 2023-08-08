@@ -53,9 +53,17 @@ jobs:
           echo "Updated version: $NEW_VERSION"
 
           # You can perform further actions with the new version here
+          # Commit and push updated package.json using the PAT
+          git config user.name "yasirrose"
+          git config user.email "yasirrose@hotmail.com"
+          git add package.json
+          git commit -m "chore: update version to $NEW_VERSION"
+          git push origin HEAD:${{ github.ref }}
         else
           echo "No version change"
         fi
+      env:
+        GH_TOKEN: ${{ secrets.GIT_TOKEN }}
 
     - name: Publish to NPM
       run: npm publish
