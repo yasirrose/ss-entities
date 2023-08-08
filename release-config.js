@@ -1,17 +1,16 @@
 module.exports = {
-    branches: ['masterdf'], // Define the branch where releases will be triggered
+    branches: ['master'],
     plugins: [
-      '@semantic-release/commit-analyzer', // Determines the release type based on commit messages
-      '@semantic-release/release-notes-generator', // Generates release notes
-      '@semantic-release/changelog', // Updates the CHANGELOG.md file
+      '@semantic-release/commit-analyzer',
+      '@semantic-release/release-notes-generator',
+      '@semantic-release/changelog',
       [
-        '@semantic-release/npm', // Publishes the package to npm
+        '@semantic-release/exec',
         {
-          npmPublish: true,
-          tarballDir: 'dist', // Change this to your package distribution directory
-        },
+          prepareCmd: 'npm version ${nextRelease.version}'
+        }
       ],
-      '@semantic-release/github', // Creates a GitHub release
-    ],
+      '@semantic-release/npm',
+      '@semantic-release/github'
+    ]
   };
-  
