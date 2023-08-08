@@ -1,5 +1,5 @@
 module.exports = {
-    branches: ['master'], // Define the branch where releases will be triggered
+    branches: ['masterdf'], // Define the branch where releases will be triggered
     plugins: [
       '@semantic-release/commit-analyzer', // Determines the release type based on commit messages
       '@semantic-release/release-notes-generator', // Generates release notes
