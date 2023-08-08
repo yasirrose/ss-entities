@@ -22,10 +22,10 @@ jobs:
     - name: Install dependencies
       run: npm install
 
-    - name: Configure npm authentication
-      run: echo "//registry.npmjs.org/:_authToken=\${NODE_AUTH_TOKEN}" > .npmrc
-      env:
-        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}  # Set up this secret in your repository settings
+    # - name: Configure npm authentication
+    #   run: echo "//registry.npmjs.org/:_authToken=\${NODE_AUTH_TOKEN}" > .npmrc
+    #   env:
+    #     NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}  # Set up this secret in your repository settings
 
     - name: Determine Version Bump
       id: determine_bump
