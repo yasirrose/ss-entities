@@ -1,4 +1,4 @@
-name: Semantic Release
+name: Publish NPM Package
 
 on:
   push:
@@ -6,23 +6,58 @@ on:
       - master
 
 jobs:
-  release:
+  publish:
     runs-on: ubuntu-latest
-
+    
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: 18
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: 14
+        registry-url: 'https://registry.npmjs.org'
 
-      - name: Install Dependencies
-        run: npm install
+    - name: Install dependencies
+      run: npm install
 
-      - name: Semantic Release
-        env:
-          GH_TOKEN: ${{ secrets.GIT_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npx semantic-release
+    - name: Determine Version Bump
+      id: determine_bump
+      run: |
+        MESSAGE=$(git log -1 --pretty=%B)
+        if echo "$MESSAGE" | grep -qi "BREAKING CHANGE"; then
+          echo "major"
+        elif echo "$MESSAGE" | grep -qi "feat:"; then
+          echo "minor"
+        else
+          echo "patch"
+        fi
+      env:
+        GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
+
+    - name: Update Package Version
+      run: |
+        # Get current version from package.json
+        CURRENT_VERSION=$(node -p "require('./package.json').version")
+        
+        # Determine bump type
+        BUMP_TYPE=${{ steps.determine_bump.outputs.major_minor_patch }}
+
+        # Calculate new version
+        NEW_VERSION=$(npm version --no-git-tag-version $BUMP_TYPE $CURRENT_VERSION)
+
+        # Update package.json with new version
+        npm --no-git-tag-version version $NEW_VERSION
+
+        # Commit and push updated package.json
+        git config user.name "yasirrose"
+        git config user.email "yasirrose@hotmail.com"
+        git commit -am "chore: version bump" --allow-empty
+        git push --follow-tags
+
+
+    - name: Publish to NPM
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}  # Set up this secret in your repository settings
+      run: npm publish
