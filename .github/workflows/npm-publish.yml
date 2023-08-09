@@ -3,7 +3,7 @@ name: Semantic Release
 on:
   push:
     branches:
-      - develop  # Change this to your main branch name
+      - develop
 
 jobs:
   release:
