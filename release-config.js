@@ -10,7 +10,12 @@ module.exports = {
           prepareCmd: 'npm version ${nextRelease.version}'
         }
       ],
-      '@semantic-release/npm',
+      [
+        '@semantic-release/npm',
+        {
+          npmPublish: true,
+        },
+      ],
       '@semantic-release/github'
     ]
   };
