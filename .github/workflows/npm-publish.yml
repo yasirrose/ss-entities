@@ -1,71 +1,28 @@
-name: Publish NPM Package
+name: Semantic Release
 
 on:
   push:
     branches:
-      - master
+      - master  # Change this to your main branch name
 
 jobs:
-  publish:
+  release:
     runs-on: ubuntu-latest
-    
+
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: 14
-        registry-url: 'https://registry.npmjs.org'
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 18  # Choose a Node.js version that matches your project
 
-    - name: Install dependencies
-      run: npm install
+      - name: Install dependencies
+        run: npm install
 
-    - name: Determine Version Bump
-      id: determine_bump
-      run: |
-        MESSAGE=$(git log -1 --pretty=%B)
-        if echo "$MESSAGE" | grep -qi "BREAKING CHANGE"; then
-          echo "::set-output name=bump::major"
-        elif echo "$MESSAGE" | grep -qi "feat:"; then
-          echo "::set-output name=bump::minor"
-        else
-          echo "::set-output name=bump::patch"
-        fi
-      env:
-        GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
-
-    - name: Update Package Version
-      run: |
-        # Get current version from package.json
-        CURRENT_VERSION=$(node -p "require('./package.json').version")
-        
-        # Determine bump type
-        BUMP_TYPE=${{ steps.determine_bump.outputs.bump }}
-
-        # Calculate new version
-        if [ "$BUMP_TYPE" != "none" ]; then
-          NEW_VERSION=$(node -p "require('semver').inc('$CURRENT_VERSION', '$BUMP_TYPE')")
-          npm version $BUMP_TYPE --git-tag-version false
-
-          # Use the updated version in subsequent steps
-          echo "Updated version: $NEW_VERSION"
-
-          # You can perform further actions with the new version here
-          # Commit and push updated package.json using the PAT
-          git config user.name "yasirrose"
-          git config user.email "yasirrose@hotmail.com"
-          git add package.json
-          git commit -m "chore: update version to $NEW_VERSION"
-          git push origin HEAD:${{ github.ref }}
-        else
-          echo "No version change"
-        fi
-      env:
-        GH_TOKEN: ${{ secrets.GIT_TOKEN }}
-
-    - name: Publish to NPM
-      run: npm publish
-      env:
-        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Semantic Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}  # If publishing to npm, provide an npm token
+        run: npx semantic-release
