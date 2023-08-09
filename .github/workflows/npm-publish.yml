@@ -23,6 +23,6 @@ jobs:
 
       - name: Semantic Release
         env:
-          GH_TOKEN: ${{ secrets.GIT_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}  # If publishing to npm, provide an npm token
         run: npx semantic-release
