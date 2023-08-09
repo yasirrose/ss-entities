@@ -1,1 +1,1 @@
-# ss-entitie
+# ss-entities
