@@ -1,2 +1,1 @@
-# ss-entitiesfff
-# jjj
+# ss-entities
